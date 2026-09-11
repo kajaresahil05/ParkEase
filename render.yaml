@@ -1,0 +1,43 @@
+# Render.com deployment configuration for ParkEase Backend
+#
+# This file describes a Render Web Service + PostgreSQL database.
+# To deploy using the Dashboard instead, use these settings:
+#
+# Web Service:
+#   - Root Directory: backend
+#   - Build Command: pip install -r requirements.txt
+#   - Start Command: gunicorn run:app --bind 0.0.0.0:$PORT
+#   - Environment: Python 3
+#
+# Environment Variables (set in Render Dashboard):
+#   DATABASE_URL        → auto-set when you link a Render PostgreSQL database
+#   SECRET_KEY          → generate a strong random key
+#   IOT_API_KEY         → ParkEase-IoT-2026-ESP32-7K9mQ2xP
+#   CORS_ORIGINS        → https://your-frontend.vercel.app
+#   ADMIN_EMAIL         → admin@parkease.com
+#   ADMIN_PASSWORD      → your-secure-admin-password
+
+services:
+  - type: web
+    name: parkease-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn run:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: IOT_API_KEY
+        value: ParkEase-IoT-2026-ESP32-7K9mQ2xP
+      - key: CORS_ORIGINS
+        value: https://your-frontend.vercel.app
+      - key: ADMIN_EMAIL
+        value: admin@parkease.com
+      - key: DATABASE_URL
+        fromDatabase:
+          name: parkease-db
+          property: connectionString
+
+databases:
+  - name: parkease-db
+    plan: free

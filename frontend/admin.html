@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkEase | Admin Control Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+
+    <!-- =====================================================
+         ADMIN LOGIN OVERLAY (Shows when not authenticated)
+    ===================================================== -->
+    <div id="adminLoginOverlay" class="admin-login-overlay">
+        <div class="admin-login-card">
+            <div class="admin-brand">
+                <div class="logo-icon">P</div>
+                <div>Park<span>Ease</span> <small class="badge-admin">ADMIN</small></div>
+            </div>
+            <h2>Admin Sign In</h2>
+            <p class="login-subtext">Access full parking management, IoT monitoring, and system analytics.</p>
+            
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="adminEmail">Admin Email</label>
+                    <input type="email" id="adminEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Admin Password</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="adminPassword" required>
+                        <button type="button" class="password-toggle-btn" aria-label="Toggle password visibility" tabindex="-1">👁️</button>
+                    </div>
+                </div>
+                <button type="submit" class="admin-btn-primary" id="adminLoginBtn">
+                    Authenticate & Access Dashboard
+                </button>
+            </form>
+            <div class="admin-login-footer">
+                <a href="index.html">← Return to Public Parking Site</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         ADMIN MAIN DASHBOARD APP
+    ===================================================== -->
+    <div id="adminApp" class="admin-app hidden">
+        <!-- MOBILE BACKDROP -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+        
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">P</div>
+                    <div>Park<span>Ease</span></div>
+                </div>
+                <span class="badge-admin">ADMIN</span>
+                <button class="close-sidebar-btn" id="closeSidebarBtn" aria-label="Close Sidebar">×</button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-view="overview">
+                    <span class="nav-icon">📊</span>
+                    <span>Overview</span>
+                </button>
+                <button class="nav-item" data-view="live-slots">
+                    <span class="nav-icon">🚗</span>
+                    <span>Live Slots</span>
+                </button>
+                <button class="nav-item" data-view="all-bookings">
+                    <span class="nav-icon">📑</span>
+                    <span>All Bookings</span>
+                </button>
+                <button class="nav-item" data-view="active-vehicles">
+                    <span class="nav-icon">🚘</span>
+                    <span>Active Vehicles</span>
+                </button>
+                <button class="nav-item" data-view="statistics">
+                    <span class="nav-icon">📈</span>
+                    <span>Analytics</span>
+                </button>
+                <button class="nav-item" data-view="iot-status">
+                    <span class="nav-icon">🔌</span>
+                    <span>Hardware & IoT</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="admin-profile">
+                    <div class="avatar">A</div>
+                    <div class="info">
+                        <strong id="adminNameDisplay">System Admin</strong>
+                        <span id="adminEmailDisplay">admin@parkease.com</span>
+                    </div>
+                </div>
+                <a href="index.html" class="nav-back-link">🌐 Public Site</a>
+                <button id="adminLogoutBtn" class="logout-btn">
+                    <span>Logout</span> 🚪
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="admin-main">
+            
+            <!-- TOPBAR -->
+            <header class="admin-topbar">
+                <div class="topbar-left">
+                    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">☰</button>
+                    <h1 id="pageTitle">Dashboard Overview</h1>
+                </div>
+                <div class="topbar-right">
+                    <div class="live-status-indicator">
+                        <span class="pulse-dot"></span>
+                        <span id="liveStatusText">Live Synced</span>
+                    </div>
+                    <div class="auto-refresh-control">
+                        <label for="autoRefreshToggle" class="switch-label">Auto-Refresh (2s)</label>
+                        <input type="checkbox" id="autoRefreshToggle" checked>
+                    </div>
+                    <button id="refreshBtn" class="btn-refresh" title="Refresh Now">
+                        🔄 Refresh
+                    </button>
+                    <button id="themeToggleAdmin" class="theme-toggle" title="Toggle Theme">🌙</button>
+                </div>
+            </header>
+
+            <!-- VIEW CONTAINER -->
+            <div class="admin-content-container">
+
+                <!-- 1. OVERVIEW VIEW -->
+                <div id="viewOverview" class="admin-view active">
+
+                    <!-- STATS GRID -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon icon-blue">🅿️</div>
+                            <div class="stat-content">
+                                <span class="stat-label">Total Slots</span>
+                                <h3 id="statTotalSlots">3</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon icon-green">🟢</div>
+                            <div class="stat-content">
+                                <span class="stat-label">Available Slots</span>
+                                <h3 id="statAvailableSlots">—</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon icon-orange">⏳</div>
+                            <div class="stat-content">
+                                <span class="stat-label">Reserved Slots</span>
+                                <h3 id="statReservedSlots">—</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon icon-red">🚘</div>
+                            <div class="stat-content">
+                                <span class="stat-label">Occupied Slots</span>
+                                <h3 id="statOccupiedSlots">—</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon icon-purple">📋</div>
+                            <div class="stat-content">
+                                <span class="stat-label">Active Bookings</span>
+                                <h3 id="statActiveBookings">—</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon icon-teal">🚗</div>
+                            <div class="stat-content">
+                                <span class="stat-label">Parked Vehicles</span>
+                                <h3 id="statActiveVehicles">—</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon icon-yellow">📅</div>
+                            <div class="stat-content">
+                                <span class="stat-label">Today's Bookings</span>
+                                <h3 id="statTodayBookings">—</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon icon-emerald">✅</div>
+                            <div class="stat-content">
+                                <span class="stat-label">Today's Completed</span>
+                                <h3 id="statTodayExits">—</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LIVE SLOTS CARDS -->
+                    <div class="dashboard-section-header">
+                        <h2>Live Slot Real-Time Monitor</h2>
+                        <span class="update-badge" id="lastUpdatedText">Updated just now</span>
+                    </div>
+
+                    <div class="live-slots-grid" id="overviewSlotsGrid">
+                        <!-- Dynamically Populated -->
+                    </div>
+
+                    <!-- SYSTEM GATE & MOVEMENT STATE -->
+                    <div class="grid-2col">
+                        <div class="card-box">
+                            <div class="card-header">
+                                <h3>⛩️ Servo Gate & Entry Movement State</h3>
+                            </div>
+                            <div class="system-state-details">
+                                <div class="state-item">
+                                    <span>Gate Movement State</span>
+                                    <strong id="gateMovementState" class="badge-state">IDLE</strong>
+                                </div>
+                                <div class="state-item">
+                                    <span>Entry Vehicle Detector</span>
+                                    <strong id="entryVehicleState" class="badge-state">CLEAR</strong>
+                                </div>
+                                <div class="state-item">
+                                    <span>Pending Entry Booking ID</span>
+                                    <strong id="pendingEntryId">—</strong>
+                                </div>
+                                <div class="state-item">
+                                    <span>Pending Exit Slot ID</span>
+                                    <strong id="pendingExitSlot">—</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-box">
+                            <div class="card-header">
+                                <h3>⚡ Quick Actions & Hardware Controls</h3>
+                            </div>
+                            <div class="quick-actions-panel">
+                                <button class="action-btn" id="btnRefreshFull">
+                                    🔄 Trigger Full Sync
+                                </button>
+                                <button class="action-btn secondary" id="btnViewHardware">
+                                    🔌 Inspect IoT Sensors
+                                </button>
+                                <a href="index.html" target="_blank" class="action-btn outline">
+                                    🔗 Open Public Portal
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 2. LIVE SLOTS VIEW -->
+                <div id="viewLiveSlots" class="admin-view hidden">
+                    <div class="dashboard-section-header">
+                        <h2>Parking Slots Real-Time Visualizer</h2>
+                    </div>
+                    <div class="live-slots-grid" id="slotsDetailGrid">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- 3. ALL BOOKINGS VIEW -->
+                <div id="viewAllBookings" class="admin-view hidden">
+                    <div class="dashboard-section-header">
+                        <h2>Bookings Management</h2>
+                        <div class="filter-controls">
+                            <input type="text" id="bookingSearchInput" placeholder="🔍 Search booking ID, vehicle, user..." class="search-input">
+                            <select id="bookingStatusFilter" class="select-input">
+                                <option value="all">All Statuses</option>
+                                <option value="active">Active</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="table-responsive">
+                            <table class="data-table" id="bookingsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Booking ID</th>
+                                        <th>User Name</th>
+                                        <th>Contact / Email</th>
+                                        <th>Vehicle Number</th>
+                                        <th>Slot</th>
+                                        <th>Status</th>
+                                        <th>Entry Time</th>
+                                        <th>Exit Time</th>
+                                        <th>Booking Created</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bookingsTableBody">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. ACTIVE VEHICLES VIEW -->
+                <div id="viewActiveVehicles" class="admin-view hidden">
+                    <div class="dashboard-section-header">
+                        <h2>Currently Active & Parked Vehicles</h2>
+                    </div>
+                    <div class="table-card">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Booking ID</th>
+                                        <th>Vehicle Number</th>
+                                        <th>User Name</th>
+                                        <th>Mobile Number</th>
+                                        <th>Assigned Slot</th>
+                                        <th>Entry Timestamp</th>
+                                        <th>Current Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="activeVehiclesTableBody">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. STATISTICS & ANALYTICS VIEW -->
+                <div id="viewStatistics" class="admin-view hidden">
+                    <div class="dashboard-section-header">
+                        <h2>System Analytics & Slot Utilization</h2>
+                    </div>
+
+                    <div class="grid-2col">
+                        <div class="card-box">
+                            <h3>📊 Current Occupancy & Utilization</h3>
+                            <div class="utilization-meter-container">
+                                <div class="meter-header">
+                                    <span>Slot Occupancy Rate</span>
+                                    <strong id="utilizationPctText">0%</strong>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div id="utilizationProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <div class="stats-summary-list">
+                                <div class="summary-item">
+                                    <span>Total Lifetime Bookings</span>
+                                    <strong id="statTotalLifetimeBookings">0</strong>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Completed Parking Sessions</span>
+                                    <strong id="statCompletedSessions">0</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-box">
+                            <h3>📅 Daily Booking Trends (Last 7 Days)</h3>
+                            <div class="bar-chart-container" id="dailyChartContainer">
+                                <!-- Bars populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. HARDWARE & IOT STATUS VIEW -->
+                <div id="viewIotStatus" class="admin-view hidden">
+                    <div class="dashboard-section-header">
+                        <h2>ESP32 Hardware & Sensor Diagnostics</h2>
+                    </div>
+
+                    <div class="grid-2col">
+                        <div class="card-box">
+                            <h3>🔌 Infrared Sensor Diagnostics & Simulation</h3>
+                            <div class="sensor-list">
+                                <div class="sensor-row">
+                                    <span class="sensor-name">Entry Gate IR Sensor (GPIO 18)</span>
+                                    <span id="sensorEntryStatus" class="sensor-badge">CLEAR</span>
+                                </div>
+                                <div class="sensor-row">
+                                    <span class="sensor-name">Exit Gate IR Sensor (GPIO 19)</span>
+                                    <span id="sensorExitStatus" class="sensor-badge">CLEAR</span>
+                                </div>
+                                <div class="sensor-row">
+                                    <span class="sensor-name">Slot 1 IR Sensor (GPIO 21)</span>
+                                    <span id="sensorS1Status" class="sensor-badge">EMPTY</span>
+                                </div>
+                                <div class="sensor-row">
+                                    <span class="sensor-name">Slot 2 IR Sensor (GPIO 22)</span>
+                                    <span id="sensorS2Status" class="sensor-badge">EMPTY</span>
+                                </div>
+                                <div class="sensor-row">
+                                    <span class="sensor-name">Slot 3 IR Sensor (GPIO 23)</span>
+                                    <span id="sensorS3Status" class="sensor-badge">EMPTY</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-box">
+                            <h3>⚙️ Servo Motor & Gate State</h3>
+                            <div class="servo-status-box">
+                                <div class="servo-visual">
+                                    <div class="gate-icon" id="gateVisualIcon">⛩️</div>
+                                    <div class="gate-state-text" id="gateStateText">CLOSED (0°)</div>
+                                </div>
+                                <div class="iot-meta">
+                                    <div>
+                                        <span>Last IoT Device Ping</span>
+                                        <strong id="iotLastPingText">Never</strong>
+                                    </div>
+                                    <div>
+                                        <span>API Security Key</span>
+                                        <strong class="code-text">Configured (X-IoT-Key)</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS -->
+    <div id="adminToast" class="admin-toast hidden"></div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

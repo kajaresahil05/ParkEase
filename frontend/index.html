@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ParkEase | Smart Parking</title>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="style.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<header class="navbar">
+
+    <div class="container nav-inner">
+
+
+        <a href="#" class="logo">
+
+            <div class="logo-icon">
+                P
+            </div>
+
+            <div>
+                Park<span>Ease</span>
+            </div>
+
+        </a>
+
+
+        <nav class="nav-links">
+
+            <a href="#parking">
+                Parking
+            </a>
+
+            <a href="#how">
+                How it works
+            </a>
+
+            <a href="#booking">
+                My booking
+            </a>
+
+        </nav>
+
+
+        <div class="nav-actions">
+
+            <button class="nav-auth-btn" id="navLoginBtn">
+                Login
+            </button>
+
+            <button class="nav-auth-btn primary" id="navRegisterBtn">
+                Register
+            </button>
+
+            <button class="nav-auth-btn hidden" id="navAccountBtn">
+                👤 My Account
+            </button>
+
+            <button class="nav-auth-btn outline hidden" id="navLogoutBtn">
+                Logout
+            </button>
+
+            <a href="admin.html" class="nav-admin-link" target="_blank">
+                Admin Portal
+            </a>
+
+            <!-- DARK MODE -->
+
+            <button
+                class="theme-toggle"
+                id="themeToggle"
+                aria-label="Toggle dark mode">
+
+                🌙
+
+            </button>
+
+
+            <a href="#parking"
+               class="nav-button">
+
+                Find a slot
+
+            </a>
+
+        </div>
+
+
+
+        <button class="mobile-menu"
+                id="mobileMenu">
+
+            ☰
+
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     WELCOME / AUTHENTICATION FIRST LANDING SCREEN
+===================================================== -->
+
+<section class="welcome-landing" id="welcomeLanding">
+    <div class="container welcome-inner">
+        <div class="welcome-badge">
+            <span class="live-dot"></span> SMART PARKING SYSTEM
+        </div>
+        <h1 class="welcome-title">
+            Welcome to <span>ParkEase</span>
+        </h1>
+        <p class="welcome-subtitle">
+            Experience effortless IoT-powered parking reservation, real-time slot monitoring, and automated gate entry. Please sign in or create an account to view and book available parking slots.
+        </p>
+        <div class="welcome-actions">
+            <button class="welcome-btn primary" id="welcomeLoginBtn">
+                🔐 Sign In
+            </button>
+            <button class="welcome-btn secondary" id="welcomeRegisterBtn">
+                ✨ Create Account
+            </button>
+        </div>
+        <div class="welcome-admin-box">
+            <span>Administrator?</span>
+            <a href="admin.html" class="welcome-admin-link">Access Admin Portal →</a>
+        </div>
+    </div>
+</section>
+
+
+<!-- =====================================================
+     USER PARKING DASHBOARD (Shown when Authenticated)
+===================================================== -->
+
+<div id="dashboardContent" class="dashboard-wrapper hidden">
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero">
+
+    <div class="container hero-content">
+
+
+
+        <div class="hero-text">
+
+
+            <div class="live-label">
+
+                <span class="live-dot"></span>
+
+                LIVE PARKING STATUS
+
+            </div>
+
+
+            <h1>
+
+                Parking made
+                <br>
+
+                <span>effortless.</span>
+
+            </h1>
+
+
+            <p class="hero-description">
+
+                Find available parking spaces in real time,
+                reserve your spot in seconds, and arrive
+                knowing exactly where to park.
+
+            </p>
+
+
+            <div class="hero-buttons">
+
+                <a href="#parking"
+                   class="primary-button">
+
+                    Reserve a parking slot
+
+                </a>
+
+
+                <a href="#how"
+                   class="secondary-button">
+
+                    How it works
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- HERO DASHBOARD -->
+
+        <div class="hero-dashboard">
+
+
+            <div class="dashboard-header">
+
+
+                <div>
+
+                    <small>
+                        SMART PARKING
+                    </small>
+
+                    <h3>
+                        City Center Parking
+                    </h3>
+
+                </div>
+
+
+                <div class="open-status">
+
+                    OPEN
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="availability">
+
+
+                <div class="availability-number"
+                     id="heroAvailable">
+
+                    3
+
+                </div>
+
+
+                <div class="availability-text">
+
+                    <strong>
+                        spaces available
+                    </strong>
+
+                    <span>
+                        out of 3 total spaces
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="progress">
+
+                <span id="heroProgress"></span>
+
+            </div>
+
+
+
+            <div class="mini-slots"
+                 id="miniSlots">
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     STATISTICS
+===================================================== -->
+
+<section class="container stats">
+
+
+    <div class="stat-card">
+
+
+        <div class="stat-icon green">
+            ✓
+        </div>
+
+
+        <div>
+
+            <small>
+                AVAILABLE
+            </small>
+
+            <strong id="availableCount">
+                3
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="stat-card">
+
+
+        <div class="stat-icon yellow">
+            ◷
+        </div>
+
+
+        <div>
+
+            <small>
+                RESERVED
+            </small>
+
+            <strong id="reservedCount">
+                0
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="stat-card">
+
+
+        <div class="stat-icon red">
+            ●
+        </div>
+
+
+        <div>
+
+            <small>
+                OCCUPIED
+            </small>
+
+            <strong id="occupiedCount">
+                0
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="stat-card">
+
+
+        <div class="stat-icon blue">
+            ⚡
+        </div>
+
+
+        <div>
+
+            <small>
+                SYSTEM
+            </small>
+
+            <strong>
+                ONLINE
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     PARKING
+===================================================== -->
+
+<section class="parking-section"
+         id="parking">
+
+
+    <div class="container">
+
+
+        <div class="section-title">
+
+
+            <span class="section-label">
+                PARKING AREA
+            </span>
+
+
+            <h2>
+                Choose your parking space
+            </h2>
+
+
+            <p>
+                Check live availability and reserve
+                an open space before you arrive.
+            </p>
+
+
+        </div>
+
+
+
+        <div class="parking-wrapper">
+
+
+            <div class="parking-area">
+
+                <div class="slot-grid"
+                     id="slotGrid">
+
+                </div>
+
+            </div>
+
+
+
+            <aside class="parking-info">
+
+
+                <div class="info-icon">
+                    P
+                </div>
+
+
+                <h3>
+                    Park with confidence.
+                </h3>
+
+
+                <p>
+
+                    Your parking status will be
+                    updated automatically using IoT
+                    sensors once the hardware is connected.
+
+                </p>
+
+
+
+                <div class="info-row">
+
+                    <span>
+                        Availability
+                    </span>
+
+                    <strong id="sideAvailability">
+                        3 / 3
+                    </strong>
+
+                </div>
+
+
+
+                <div class="info-row">
+
+                    <span>
+                        Booking
+                    </span>
+
+                    <strong>
+                        Instant
+                    </strong>
+
+                </div>
+
+
+
+                <div class="info-row">
+
+                    <span>
+                        Access
+                    </span>
+
+                    <strong>
+                        24 / 7
+                    </strong>
+
+                </div>
+
+
+            </aside>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     HOW IT WORKS
+===================================================== -->
+
+<section class="how"
+         id="how">
+
+
+    <div class="container">
+
+
+        <div class="section-title">
+
+
+            <span class="section-label">
+                HOW IT WORKS
+            </span>
+
+
+            <h2>
+                From booking to parked.
+            </h2>
+
+
+            <p>
+                Book your slot, verify your reservation at the entrance, and park with IoT assistance.
+            </p>
+
+
+        </div>
+
+
+
+        <div class="steps">
+
+
+            <article class="step">
+
+                <div class="step-number">
+                    01
+                </div>
+
+                <div class="step-icon">
+                    B
+                </div>
+
+                <h3>
+                    Book your slot
+                </h3>
+
+                <p>
+                    Check live slot availability and
+                    reserve a parking space with your
+                    vehicle number.
+                </p>
+
+            </article>
+
+
+
+            <article class="step">
+
+                <div class="step-number">
+                    02
+                </div>
+
+                <div class="step-icon">
+                    ✓
+                </div>
+
+                <h3>
+                    Verify & enter
+                </h3>
+
+                <p>
+                    When your vehicle reaches the
+                    entry sensor, tap Enter Parking.
+                    Your active booking is verified
+                    automatically.
+                </p>
+
+            </article>
+
+
+
+            <article class="step">
+
+                <div class="step-number">
+                    03
+                </div>
+
+                <div class="step-icon">
+                    P
+                </div>
+
+                <h3>
+                    Gate opens & park
+                </h3>
+
+                <p>
+                    A verified vehicle is allowed
+                    through the smart gate. The slot
+                    sensor then confirms the vehicle.
+                </p>
+
+            </article>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     MY BOOKING
+===================================================== -->
+
+<section class="booking-section"
+         id="booking">
+
+
+    <div class="container">
+
+
+        <div class="booking-card">
+
+
+            <div>
+
+                <span class="section-label">
+                    MY BOOKING
+                </span>
+
+
+                <h2 id="bookingHeading">
+                    No active reservation
+                </h2>
+
+
+                <p id="bookingText">
+                    Choose an available slot
+                    to create your reservation.
+                </p>
+
+                <div class="booking-details hidden"
+                     id="bookingDetails">
+
+                    <div class="booking-detail">
+                        <span>Booking ID</span>
+                        <strong id="bookingIdValue">—</strong>
+                    </div>
+
+                    <div class="booking-detail">
+                        <span>Vehicle</span>
+                        <strong id="bookingVehicleValue">—</strong>
+                    </div>
+
+                    <div class="booking-detail">
+                        <span>Slot</span>
+                        <strong id="bookingSlotValue">—</strong>
+                    </div>
+
+                </div>
+
+                <div class="entry-panel hidden"
+                     id="entryPanel">
+
+                    <div class="entry-status">
+                        <span class="entry-status-dot"
+                              id="entryStatusDot"></span>
+
+                        <div>
+                            <strong id="entryStatusTitle">
+                                Ready for entry
+                            </strong>
+
+                            <p id="entryStatusText">
+                                Reach the entry sensor, then tap Enter Parking.
+                            </p>
+                        </div>
+                    </div>
+
+                    <button class="enter-button"
+                            id="enterParking"
+                            type="button">
+
+                        Enter Parking
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <button class="cancel-button hidden"
+                    id="cancelBooking">
+
+                Cancel reservation
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+</div> <!-- End #dashboardContent -->
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <div class="container footer-inner">
+
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                P
+            </div>
+
+            <div>
+                Park<span>Ease</span>
+            </div>
+
+        </div>
+
+
+        <span>
+            IoT Smart Parking System
+        </span>
+
+
+        <span>
+            © 2026
+        </span>
+
+
+    </div>
+
+</footer>
+
+
+
+<!-- =====================================================
+     BOOKING MODAL
+===================================================== -->
+
+<div class="modal-overlay hidden"
+     id="modal">
+
+
+    <div class="modal">
+
+
+        <button class="close-modal"
+                id="closeModal">
+
+            ×
+
+        </button>
+
+
+        <div class="modal-icon">
+            P
+        </div>
+
+
+        <span class="section-label">
+            RESERVE PARKING
+        </span>
+
+
+        <h2>
+            Book <span id="modalSlot">S1</span>
+        </h2>
+
+
+        <p class="modal-description">
+            Your account profile is automatically linked to this reservation.
+            Please enter your vehicle number below to confirm.
+        </p>
+
+
+        <form id="bookingForm">
+
+
+            <input type="hidden"
+                   id="selectedSlot">
+
+
+            <div class="form-group">
+
+                <label>
+                    Full name <small class="field-badge">(Auto-fetched from account)</small>
+                </label>
+
+                <input type="text"
+                       id="userName"
+                       placeholder="Account Full Name"
+                       readonly
+                       disabled
+                       class="readonly-field">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Mobile number <small class="field-badge">(Auto-fetched from account)</small>
+                </label>
+
+                <input type="tel"
+                       id="userPhone"
+                       placeholder="Account Mobile Number"
+                       readonly
+                       disabled
+                       class="readonly-field">
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label>
+                    Vehicle number
+                </label>
+
+                <input type="text"
+                       id="vehicleNumber"
+                       placeholder="e.g. MH12AB1234"
+                       maxlength="12"
+                       autocomplete="off"
+                       required>
+
+            </div>
+
+
+            <button class="confirm-button"
+                    type="submit">
+
+                Confirm reservation
+
+            </button>
+
+
+        </form>
+
+
+        <small class="demo-note">
+
+            Your booking is linked to your vehicle number
+            and will be verified before parking entry.
+
+        </small>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     LOGIN MODAL
+===================================================== -->
+<div class="modal-overlay hidden" id="loginModal">
+    <div class="modal">
+        <button class="close-modal" id="closeLoginModal">×</button>
+        <div class="modal-icon">P</div>
+        <span class="section-label">USER ACCESS</span>
+        <h2>Sign In to <span>ParkEase</span></h2>
+        <p class="modal-description">Enter your email and password to access your reservations.</p>
+        
+        <form id="userLoginForm">
+            <div class="form-group">
+                <label>Email address</label>
+                <input type="email" id="loginEmail" placeholder="your.email@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="loginPassword" required>
+                    <button type="button" class="password-toggle-btn" aria-label="Toggle password visibility" tabindex="-1">👁️</button>
+                </div>
+            </div>
+            <button class="confirm-button" type="submit" id="btnLoginSubmit">Sign In</button>
+        </form>
+        
+        <div class="auth-modal-footer">
+            <a href="#" id="openForgotPassword" class="forgot-password-link">Forgot Password?</a>
+        </div>
+        <div class="auth-modal-footer">
+            Don't have an account? <a href="#" id="switchToRegister">Create Account</a>
+        </div>
+    </div>
+</div>
+
+<!-- =====================================================
+     FORGOT PASSWORD MODAL
+===================================================== -->
+<div class="modal-overlay hidden" id="forgotPasswordModal">
+    <div class="modal">
+        <button class="close-modal" id="closeForgotPasswordModal">×</button>
+        <div class="modal-icon">🔑</div>
+        <span class="section-label">ACCOUNT RECOVERY</span>
+        <h2>Forgot Password?</h2>
+        <p class="modal-description">Enter your registered email address to receive password reset instructions.</p>
+        
+        <form id="forgotPasswordForm">
+            <div class="form-group">
+                <label>Email address</label>
+                <input type="email" id="forgotEmail" placeholder="your.email@example.com" required>
+            </div>
+            <button class="confirm-button" type="submit" id="btnForgotSubmit">Send Reset Link</button>
+        </form>
+        
+        <div class="auth-modal-footer">
+            Remember your password? <a href="#" id="forgotSwitchToLogin">Sign in instead</a>
+        </div>
+    </div>
+</div>
+
+<!-- =====================================================
+     RESET PASSWORD MODAL
+===================================================== -->
+<div class="modal-overlay hidden" id="resetPasswordModal">
+    <div class="modal">
+        <button class="close-modal" id="closeResetPasswordModal">×</button>
+        <div class="modal-icon">🔒</div>
+        <span class="section-label">NEW PASSWORD</span>
+        <h2>Reset Password</h2>
+        <p class="modal-description">Enter your reset token and your new password below.</p>
+        
+        <form id="resetPasswordForm">
+            <div class="form-group">
+                <label>Reset Token</label>
+                <input type="text" id="resetToken" placeholder="Enter reset token" required>
+            </div>
+            <div class="form-group">
+                <label>New Password</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="resetNewPassword" minlength="6" required>
+                    <button type="button" class="password-toggle-btn" aria-label="Toggle password visibility" tabindex="-1">👁️</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Confirm New Password</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="resetConfirmPassword" minlength="6" required>
+                    <button type="button" class="password-toggle-btn" aria-label="Toggle password visibility" tabindex="-1">👁️</button>
+                </div>
+            </div>
+            <button class="confirm-button" type="submit" id="btnResetSubmit">Reset Password</button>
+        </form>
+        
+        <div class="auth-modal-footer">
+            <a href="#" id="resetSwitchToLogin">Back to Sign In</a>
+        </div>
+    </div>
+</div>
+
+<!-- =====================================================
+     REGISTER MODAL
+===================================================== -->
+<div class="modal-overlay hidden" id="registerModal">
+    <div class="modal">
+        <button class="close-modal" id="closeRegisterModal">×</button>
+        <div class="modal-icon">P</div>
+        <span class="section-label">NEW ACCOUNT</span>
+        <h2>Create Account</h2>
+        <p class="modal-description">Register to manage smart parking reservations effortlessly.</p>
+        
+        <form id="userRegisterForm">
+            <div class="form-group">
+                <label>Full name</label>
+                <input type="text" id="regName" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label>Email address</label>
+                <input type="email" id="regEmail" placeholder="your.email@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>Mobile number</label>
+                <input type="tel" id="regPhone" placeholder="10-digit mobile number" maxlength="10" pattern="[0-9]{10}" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="regPassword" minlength="6" required>
+                    <button type="button" class="password-toggle-btn" aria-label="Toggle password visibility" tabindex="-1">👁️</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="regConfirmPassword" minlength="6" required>
+                    <button type="button" class="password-toggle-btn" aria-label="Toggle password visibility" tabindex="-1">👁️</button>
+                </div>
+            </div>
+            <button class="confirm-button" type="submit" id="btnRegisterSubmit">Register Account</button>
+        </form>
+
+        <div class="auth-modal-footer">
+            Already have an account? <a href="#" id="switchToLogin">Sign in instead</a>
+        </div>
+    </div>
+</div>
+
+<!-- =====================================================
+     MY ACCOUNT MODAL
+===================================================== -->
+<div class="modal-overlay hidden" id="accountModal">
+    <div class="modal">
+        <button class="close-modal" id="closeAccountModal">×</button>
+        <div class="modal-icon">👤</div>
+        <span class="section-label">USER PROFILE</span>
+        <h2>My Account</h2>
+        <div class="account-details-box">
+            <div class="account-row"><span>Full Name</span><strong id="accName">—</strong></div>
+            <div class="account-row"><span>Email</span><strong id="accEmail">—</strong></div>
+            <div class="account-row"><span>Mobile</span><strong id="accPhone">—</strong></div>
+            <div class="account-row"><span>Role</span><strong id="accRole">USER</strong></div>
+        </div>
+        <div class="account-actions">
+            <a href="#booking" class="account-btn" id="btnGoToBooking">My Booking</a>
+            <button type="button" class="account-btn danger" id="modalLogoutBtn">Sign Out</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+
+<div class="toast hidden"
+     id="toast">
+</div>
+
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

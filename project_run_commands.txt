@@ -1,0 +1,14 @@
+1.Backend
+
+cd d:\ParkEase\backend
+.venv\Scripts\python.exe run.py
+
+2.Frontend
+
+cd d:\ParkEase\frontend
+d:\ParkEase\backend\.venv\Scripts\python.exe -m http.server 5500
+
+3.Quick Reset Database
+
+cd d:\ParkEase\backend
+.venv\Scripts\python.exe -c "import pymysql; conn = pymysql.connect(host='localhost', user='parkease_app', password='Sahil#1505', database='parkease'); cur = conn.cursor(); cur.execute('DELETE FROM bookings'); cur.execute('DELETE FROM users'); cur.execute('UPDATE parking_slots SET status=\'AVAILABLE\', sensor_status=\'EMPTY\''); cur.execute('UPDATE parking_system_state SET movement_state=\'IDLE\', pending_exit_slot_id=NULL, entry_vehicle_waiting=0, pending_entry_booking_id=NULL WHERE id=1'); conn.commit(); conn.close(); print('Database Reset Complete!')"
