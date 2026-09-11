@@ -25,7 +25,7 @@
 // Auto-detect backend URL: use localhost for local dev, Render URL for production
 const API_BASE_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
     ? "http://127.0.0.1:5000"
-    : "https://parkease-backend.onrender.com";
+    : "https://parkease-backend-cer9.onrender.com";
 
 
 /* =====================================================
