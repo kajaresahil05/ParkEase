@@ -15,6 +15,7 @@ from .auth import generate_token
 from .extensions import db
 from .models import (
     Booking,
+    BookingHistory,
     ParkingSlot,
     ParkingSystemState,
     User,
@@ -434,6 +435,21 @@ def create_booking(payload: object, current_user: Optional[User] = None) -> Book
                 ).scalars().first()
 
                 if previous_booking is not None:
+                    # Archive the previous visit to history before recycling
+                    prev_slot = db.session.get(ParkingSlot, previous_booking.slot_id)
+                    history = BookingHistory(
+                        booking_id=previous_booking.booking_id,
+                        user_id=previous_booking.user_id,
+                        slot_number=prev_slot.slot_number if prev_slot else "?",
+                        vehicle_number=previous_booking.vehicle_number,
+                        status=previous_booking.status,
+                        entry_time=previous_booking.entry_time,
+                        exit_time=previous_booking.exit_time,
+                        booking_time=previous_booking.booking_time,
+                        created_at=previous_booking.created_at,
+                    )
+                    db.session.add(history)
+
                     # Recycle the existing booking record — same booking_id
                     previous_booking.slot_id = slot.id
                     previous_booking.active_slot_id = slot.id
@@ -1024,12 +1040,8 @@ def get_admin_bookings_data(search: str = "", status_filter: str = "all", month_
     from datetime import datetime, timezone
     from calendar import monthrange
 
-    query = select(Booking).order_by(Booking.created_at.desc())
-
-    if status_filter and status_filter.lower() != "all":
-        query = query.where(Booking.status == status_filter.upper())
-
-    # Filter by month (expected format: YYYY-MM)
+    month_start = None
+    month_end = None
     if month_filter and month_filter.lower() != "all":
         try:
             year, month = month_filter.split("-")
@@ -1037,27 +1049,45 @@ def get_admin_bookings_data(search: str = "", status_filter: str = "all", month_
             month_start = datetime(year, month, 1, tzinfo=timezone.utc)
             _, last_day = monthrange(year, month)
             month_end = datetime(year, month, last_day, 23, 59, 59, 999999, tzinfo=timezone.utc)
-            query = query.where(Booking.created_at >= month_start, Booking.created_at <= month_end)
         except (ValueError, TypeError):
-            pass  # Invalid month format — ignore filter
+            pass
 
+    # ── Query current bookings ──
+    query = select(Booking).order_by(Booking.created_at.desc())
+    if status_filter and status_filter.lower() != "all":
+        query = query.where(Booking.status == status_filter.upper())
+    if month_start and month_end:
+        query = query.where(Booking.created_at >= month_start, Booking.created_at <= month_end)
     bookings = db.session.execute(query).scalars().all()
+
+    # ── Query archived history ──
+    hist_query = select(BookingHistory).order_by(BookingHistory.created_at.desc())
+    if status_filter and status_filter.lower() != "all":
+        hist_query = hist_query.where(BookingHistory.status == status_filter.upper())
+    if month_start and month_end:
+        hist_query = hist_query.where(BookingHistory.created_at >= month_start, BookingHistory.created_at <= month_end)
+    history_records = db.session.execute(hist_query).scalars().all()
+
+    # ── Merge and apply search filter ──
+    all_records = []
+    for b in bookings:
+        all_records.append((b.as_api_dict(), b.created_at))
+    for h in history_records:
+        all_records.append((h.as_api_dict(), h.created_at))
+
+    # Sort merged records by created_at descending
+    all_records.sort(key=lambda x: x[1] if x[1] else datetime.min.replace(tzinfo=timezone.utc), reverse=True)
 
     results = []
     search_lower = search.lower().strip()
-    for b in bookings:
-        b_dict = b.as_api_dict()
+    for b_dict, _ in all_records:
         if search_lower:
-            user_name = b.user.name.lower() if b.user else ""
-            user_email = b.user.email.lower() if (b.user and b.user.email) else ""
-            user_phone = b.user.phone if b.user else ""
-
             match = (
-                search_lower in b.booking_id.lower() or
-                search_lower in b.vehicle_number.lower() or
-                search_lower in user_name or
-                search_lower in user_email or
-                search_lower in user_phone
+                search_lower in b_dict.get("booking_id", "").lower() or
+                search_lower in b_dict.get("vehicle_number", "").lower() or
+                search_lower in b_dict.get("user_name", "").lower() or
+                search_lower in b_dict.get("user_email", "").lower() or
+                search_lower in b_dict.get("user_phone", "").lower()
             )
             if not match:
                 continue

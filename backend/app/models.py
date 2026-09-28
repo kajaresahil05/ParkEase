@@ -127,6 +127,47 @@ class Booking(db.Model):
         }
 
 
+class BookingHistory(db.Model):
+    """Archived record of a past parking visit, preserved when a booking is recycled."""
+
+    __tablename__ = "booking_history"
+
+    id = db.Column(db.Integer, primary_key=True)
+    booking_id = db.Column(db.String(20), nullable=False, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    slot_number = db.Column(db.String(10), nullable=False)
+    vehicle_number = db.Column(db.String(20), nullable=False)
+    status = db.Column(db.String(20), nullable=False)
+    entry_time = db.Column(db.DateTime(timezone=True), nullable=True)
+    exit_time = db.Column(db.DateTime(timezone=True), nullable=True)
+    booking_time = db.Column(db.DateTime(timezone=True), nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=utcnow)
+
+    user = db.relationship("User")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def as_api_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "booking_id": self.booking_id,
+            "slot": self.slot_number,
+            "slot_id": None,
+            "vehicle_number": self.vehicle_number,
+            "status": self.status.lower(),
+            "user_name": self.user.name if self.user else "",
+            "user_email": self.user.email if self.user else "",
+            "user_phone": self.user.phone if self.user else "",
+            "entry_authorized": False,
+            "entry_time": format_dt_iso(self.entry_time),
+            "exit_time": format_dt_iso(self.exit_time),
+            "booking_time": format_dt_iso(self.booking_time),
+            "created_at": format_dt_iso(self.created_at),
+            "is_history": True,
+        }
+
+
 class ParkingSystemState(db.Model):
     """Single persisted gate and vehicle-movement state."""
 
