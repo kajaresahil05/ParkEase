@@ -421,23 +421,47 @@ def create_booking(payload: object, current_user: Optional[User] = None) -> Book
                 if existing_active is not None:
                     raise ApiError("You already have an active booking.", 409)
 
-                booking_id = _new_booking_id()
+                # ── Reuse existing booking for returning users ──
+                # Look for the user's most recent COMPLETED or CANCELLED booking
+                previous_booking = db.session.execute(
+                    select(Booking)
+                    .where(
+                        Booking.user_id == user.id,
+                        Booking.status.in_(["COMPLETED", "CANCELLED"])
+                    )
+                    .order_by(Booking.updated_at.desc())
+                    .with_for_update()
+                ).scalars().first()
 
-                booking = Booking(
-                    booking_id=booking_id,
-                    user_id=user.id,
-                    slot_id=slot.id,
-                    active_slot_id=slot.id,
-                    vehicle_number=data["vehicle_number"],
-                    status="ACTIVE",
-                    entry_authorized=False,
-                )
+                if previous_booking is not None:
+                    # Recycle the existing booking record — same booking_id
+                    previous_booking.slot_id = slot.id
+                    previous_booking.active_slot_id = slot.id
+                    previous_booking.vehicle_number = data["vehicle_number"]
+                    previous_booking.status = "ACTIVE"
+                    previous_booking.entry_authorized = False
+                    previous_booking.entry_time = None
+                    previous_booking.exit_time = None
+                    previous_booking.booking_time = utcnow()
+                    previous_booking.created_at = utcnow()
+                    booking = previous_booking
+                else:
+                    # First-time user — create a brand new booking
+                    booking_id = _new_booking_id()
+                    booking = Booking(
+                        booking_id=booking_id,
+                        user_id=user.id,
+                        slot_id=slot.id,
+                        active_slot_id=slot.id,
+                        vehicle_number=data["vehicle_number"],
+                        status="ACTIVE",
+                        entry_authorized=False,
+                    )
+                    db.session.add(booking)
+                    db.session.flush()
 
                 slot.status = SLOT_RESERVED
                 slot.sensor_status = SENSOR_EMPTY
-
-                db.session.add(booking)
-                db.session.flush()
 
             logger.info("BOOKING CREATED %s slot=%s", booking.booking_id, data["slot"])
             return booking
