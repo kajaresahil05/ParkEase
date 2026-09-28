@@ -996,11 +996,26 @@ def get_admin_dashboard_data() -> dict:
     }
 
 
-def get_admin_bookings_data(search: str = "", status_filter: str = "all") -> list:
+def get_admin_bookings_data(search: str = "", status_filter: str = "all", month_filter: str = "all") -> list:
+    from datetime import datetime, timezone
+    from calendar import monthrange
+
     query = select(Booking).order_by(Booking.created_at.desc())
 
     if status_filter and status_filter.lower() != "all":
         query = query.where(Booking.status == status_filter.upper())
+
+    # Filter by month (expected format: YYYY-MM)
+    if month_filter and month_filter.lower() != "all":
+        try:
+            year, month = month_filter.split("-")
+            year, month = int(year), int(month)
+            month_start = datetime(year, month, 1, tzinfo=timezone.utc)
+            _, last_day = monthrange(year, month)
+            month_end = datetime(year, month, last_day, 23, 59, 59, 999999, tzinfo=timezone.utc)
+            query = query.where(Booking.created_at >= month_start, Booking.created_at <= month_end)
+        except (ValueError, TypeError):
+            pass  # Invalid month format — ignore filter
 
     bookings = db.session.execute(query).scalars().all()
 

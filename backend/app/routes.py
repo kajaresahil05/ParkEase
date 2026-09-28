@@ -174,7 +174,8 @@ def admin_dashboard_route():
 def admin_bookings_route():
     search = request.args.get("search", "")
     status_filter = request.args.get("status", "all")
-    bookings = get_admin_bookings_data(search=search, status_filter=status_filter)
+    month_filter = request.args.get("month", "all")
+    bookings = get_admin_bookings_data(search=search, status_filter=status_filter, month_filter=month_filter)
     return jsonify(success=True, bookings=bookings, count=len(bookings))
 
 

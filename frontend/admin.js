@@ -385,15 +385,59 @@ function renderSlotsGrid(containerId, slots) {
 }
 
 /* 2. BOOKINGS DATA */
+function populateMonthFilter() {
+    const select = document.getElementById("bookingMonthFilter");
+    if (!select || select.options.length > 1) return;
+
+    const now = new Date();
+    const months = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+
+    // Generate options for each month from Jan of current year up to current month,
+    // plus all 12 months of the previous year — newest first
+    const options = [];
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth(); // 0-indexed
+
+    for (let m = currentMonth; m >= 0; m--) {
+        const val = `${currentYear}-${String(m + 1).padStart(2, "0")}`;
+        options.push({ value: val, label: `${months[m]} ${currentYear}` });
+    }
+
+    const prevYear = currentYear - 1;
+    for (let m = 11; m >= 0; m--) {
+        const val = `${prevYear}-${String(m + 1).padStart(2, "0")}`;
+        options.push({ value: val, label: `${months[m]} ${prevYear}` });
+    }
+
+    options.forEach(opt => {
+        const el = document.createElement("option");
+        el.value = opt.value;
+        el.textContent = opt.label;
+        select.appendChild(el);
+    });
+}
+populateMonthFilter();
+
 async function fetchBookingsData() {
     const searchVal = document.getElementById("bookingSearchInput")?.value || "";
     const filterVal = document.getElementById("bookingStatusFilter")?.value || "all";
+    const monthVal = document.getElementById("bookingMonthFilter")?.value || "all";
 
-    const data = await adminApi(`/api/admin/bookings?search=${encodeURIComponent(searchVal)}&status=${filterVal}`);
+    let url = `/api/admin/bookings?search=${encodeURIComponent(searchVal)}&status=${filterVal}`;
+    if (monthVal && monthVal !== "all") {
+        url += `&month=${encodeURIComponent(monthVal)}`;
+    }
+
+    const data = await adminApi(url);
     if (!data.success) return;
 
     state.bookingsData = data.bookings;
     renderBookingsTable(data.bookings);
+
+    // Update count badge
+    const countBadge = document.getElementById("bookingCountBadge");
+    if (countBadge) countBadge.textContent = `${data.count} booking${data.count !== 1 ? 's' : ''}`;
 }
 
 function formatDateDDMMYYYY(dateInput, includeTime = true) {
@@ -457,9 +501,11 @@ function renderBookingsTable(bookings) {
 // Search & Filter event handlers
 const searchInput = document.getElementById("bookingSearchInput");
 const statusFilter = document.getElementById("bookingStatusFilter");
+const monthFilter = document.getElementById("bookingMonthFilter");
 
 if (searchInput) searchInput.addEventListener("input", debounce(() => fetchBookingsData(), 300));
 if (statusFilter) statusFilter.addEventListener("change", () => fetchBookingsData());
+if (monthFilter) monthFilter.addEventListener("change", () => fetchBookingsData());
 
 function debounce(func, delay) {
     let timer;

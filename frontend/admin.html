@@ -266,9 +266,12 @@
                 <!-- 3. ALL BOOKINGS VIEW -->
                 <div id="viewAllBookings" class="admin-view hidden">
                     <div class="dashboard-section-header">
-                        <h2>Bookings Management</h2>
+                        <h2>Bookings Management <span id="bookingCountBadge" class="update-badge"></span></h2>
                         <div class="filter-controls">
                             <input type="text" id="bookingSearchInput" placeholder="🔍 Search booking ID, vehicle, user..." class="search-input">
+                            <select id="bookingMonthFilter" class="select-input">
+                                <option value="all">All Months</option>
+                            </select>
                             <select id="bookingStatusFilter" class="select-input">
                                 <option value="all">All Statuses</option>
                                 <option value="active">Active</option>
