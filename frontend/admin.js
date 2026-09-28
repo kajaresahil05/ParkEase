@@ -393,21 +393,18 @@ function populateMonthFilter() {
     const months = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"];
 
-    // Generate options for each month from Jan of current year up to current month,
-    // plus all 12 months of the previous year — newest first
+    // Generate options from January 2026 up to current month — newest first
     const options = [];
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth(); // 0-indexed
+    const startYear = 2026;
 
-    for (let m = currentMonth; m >= 0; m--) {
-        const val = `${currentYear}-${String(m + 1).padStart(2, "0")}`;
-        options.push({ value: val, label: `${months[m]} ${currentYear}` });
-    }
-
-    const prevYear = currentYear - 1;
-    for (let m = 11; m >= 0; m--) {
-        const val = `${prevYear}-${String(m + 1).padStart(2, "0")}`;
-        options.push({ value: val, label: `${months[m]} ${prevYear}` });
+    for (let y = currentYear; y >= startYear; y--) {
+        const lastMonth = (y === currentYear) ? currentMonth : 11;
+        for (let m = lastMonth; m >= 0; m--) {
+            const val = `${y}-${String(m + 1).padStart(2, "0")}`;
+            options.push({ value: val, label: `${months[m]} ${y}` });
+        }
     }
 
     options.forEach(opt => {
