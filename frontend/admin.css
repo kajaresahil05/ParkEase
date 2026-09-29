@@ -32,6 +32,84 @@
     --admin-accent: #0891b2;
 }
 
+/* ── Light Theme Component Overrides ── */
+
+[data-theme="light"] .slot-card-admin {
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .info-row {
+    background: #f1f5f9;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .info-row span {
+    color: #475569;
+}
+
+[data-theme="light"] .info-row strong {
+    color: #0f172a;
+}
+
+[data-theme="light"] .slot-number-badge {
+    color: #0f172a;
+}
+
+[data-theme="light"] .data-table th {
+    background: #f1f5f9;
+}
+
+[data-theme="light"] .data-table tr:hover td {
+    background: #f8fafc;
+}
+
+[data-theme="light"] .sensor-row {
+    background: #f1f5f9;
+}
+
+[data-theme="light"] .progress-bar-bg {
+    background: #e2e8f0;
+}
+
+[data-theme="light"] .btn-refresh {
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+}
+
+[data-theme="light"] .btn-refresh:hover {
+    background: #e2e8f0;
+}
+
+[data-theme="light"] .action-btn.secondary {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
+}
+
+[data-theme="light"] .action-btn.outline {
+    border-color: #e2e8f0;
+    color: #0f172a;
+}
+
+[data-theme="light"] .stat-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .nav-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .admin-toast {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .admin-login-overlay {
+    background: radial-gradient(circle at top right, #e0e7ff, #f1f5f9 70%);
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
