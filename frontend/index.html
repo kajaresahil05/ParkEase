@@ -887,8 +887,10 @@
 
                 <input type="text"
                        id="vehicleNumber"
-                       placeholder="e.g. MH12AB1234"
-                       maxlength="12"
+                       placeholder="e.g. MH05SD2341"
+                       minlength="10"
+                       maxlength="10"
+                       pattern="[A-Za-z0-9]{10}"
                        autocomplete="off"
                        required>
 

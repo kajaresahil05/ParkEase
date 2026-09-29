@@ -38,7 +38,7 @@ def transaction_scope():
 
 SLOT_PATTERN = re.compile(r"^S[1-3]$", re.IGNORECASE)
 PHONE_PATTERN = re.compile(r"^[0-9]{10}$")
-VEHICLE_PATTERN = re.compile(r"^[A-Z0-9 -]{5,12}$")
+VEHICLE_PATTERN = re.compile(r"^[A-Z0-9]{10}$")
 EMAIL_PATTERN = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
 
 
@@ -314,7 +314,7 @@ def validate_booking_payload(payload: object, current_user: Optional[User] = Non
         raise ApiError("Phone must be a 10-digit mobile number.")
 
     if not VEHICLE_PATTERN.fullmatch(vehicle_number):
-        raise ApiError("Vehicle number format is invalid.")
+        raise ApiError("Vehicle number must be exactly 10 alphanumeric characters (e.g. MH05SD2341).")
 
     if not SLOT_PATTERN.fullmatch(slot_number):
         raise ApiError("Slot must be one of S1, S2, or S3.")

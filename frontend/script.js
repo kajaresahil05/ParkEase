@@ -1308,13 +1308,13 @@ if (bookingForm) {
             ----------------------------------------- */
 
             if (
-                !/^[A-Z0-9 -]{5,12}$/.test(
+                !/^[A-Z0-9]{10}$/.test(
                     vehicleNumber
                 )
             ) {
 
                 showToast(
-                    "Enter a valid vehicle number."
+                    "Vehicle number must be exactly 10 alphanumeric characters (e.g. MH05SD2341)."
                 );
 
 
